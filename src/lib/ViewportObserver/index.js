@@ -4,6 +4,19 @@ const { inViewport }  = require('./in')
 
 const ViewportObserver = (function () {
 
+  const throttle = (func, limit) => {
+    let wait = false
+    return function () {
+      if (!wait) {
+        func.apply(null, arguments)
+        wait = true
+        setTimeout(() => {
+          wait = false
+        }, limit)
+      }
+    }
+  }
+
   class ViewportObserver {
 
     constructor (options) {
@@ -21,13 +34,14 @@ const ViewportObserver = (function () {
         throw new TypeError('Expected tolerance to be finite integer')
       }
 
-      if (typeof this.opts.container === 'string') {
+      if (typeof this.opts.container === 'string' && !!this.opts.container) {
         this._container = document.querySelector(this.opts.container)
       } else if (this.opts.container instanceof HTMLElement) {
         this._container = this.opts.container
       }
 
       this._container = this._container || window
+      this._scroll = throttle(this.scroll.bind(this), 500)
       this.subscribedElements = {}
       this.attached = false
       this.timeout = null
@@ -54,9 +68,9 @@ const ViewportObserver = (function () {
     subscribe (event, selector, callback) {
       const allowedEvents = ['enter', 'leave']
 
-      if (!event) throw new Error('No event provided [enter | leave]')
+      if (!event) throw new Error('No event provided { enter or leave }')
       if (!selector) throw new Error('No selector provided')
-      if (!allowedEvents.includes(event)) throw new Error(`${event} event not supported`)
+      if (!allowedEvents.includes(event)) throw new Error(`${event} event not supported { enter or leave }`)
 
       if (!{}.hasOwnProperty.call(this.subscribedElements, selector)) {
         this.subscribedElements[selector] = {}
@@ -114,15 +128,15 @@ const ViewportObserver = (function () {
         }
       }
 
-      this._container.addEventListener('scroll', this.scroll)
-      window.addEventListener('resize', this.scroll)
-      this.scroll()
+      this._container.addEventListener('scroll', this._scroll)
+      window.addEventListener('resize', this._scroll)
+      this._scroll()
       this.attached = true
     }
 
     disconnect () {
-      this._container.removeEventListener('scroll', this.scroll)
-      window.removeEventListener('resize', this.scroll)
+      this._container.removeEventListener('scroll', this._scroll)
+      window.removeEventListener('resize', this._scroll)
       this.unobserve()
       this.attached = false
     }

@@ -12,11 +12,11 @@ const inViewport = (elm, options = { tolerance: 0 }) => {
   const elmRect = element.getBoundingClientRect()
 
   return (
-    elmRect.bottom - options.tolerance > 0 &&
-    elmRect.right - options.tolerance > 0 &&
-    elmRect.left + options.tolerance < (window.innerWidth ||
+    elmRect.top + options.tolerance >= 0 &&
+    elmRect.left + options.tolerance >= 0 &&
+    elmRect.right - options.tolerance <= (window.innerWidth ||
     document.documentElement.clientWidth) &&
-    elmRect.top + options.tolerance < (window.innerHeight ||
+    elmRect.bottom - options.tolerance <= (window.innerHeight ||
     document.documentElement.clientHeight)
   )
 }
@@ -27,7 +27,7 @@ const inContainer = (elm, options = { tolerance: 0, container: '' }) => {
   }
 
   let element = elm
-  let opts = {...options}
+  let opts = Object.assign({}, options)
 
   if (typeof elm === 'string') {
     element = document.querySelector(elm)
@@ -55,13 +55,16 @@ const inContainer = (elm, options = { tolerance: 0, container: '' }) => {
   const containerRect = opts.container.getBoundingClientRect()
 
   return (
-    (element.offsetTop + element.clientHeight) - opts.tolerance >
+    (element.offsetTop + element.clientHeight) + opts.tolerance >=
     opts.container.scrollTop &&
-    (element.offsetLeft + element.clientWidth) - opts.tolerance >
+
+    (element.offsetLeft + element.clientWidth) + opts.tolerance >=
     opts.container.scrollLeft &&
-    element.offsetLeft + opts.tolerance <
+
+    element.offsetLeft - opts.tolerance <=
     containerRect.width + opts.container.scrollLeft &&
-    element.offsetTop + opts.tolerance <
+
+    element.offsetTop - opts.tolerance <=
     containerRect.height + opts.container.scrollTop
   )
 }
