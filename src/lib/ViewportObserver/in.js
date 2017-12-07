@@ -1,55 +1,60 @@
-const inViewport = (elm, options = { tolerance: 0 }) => {
-  if (!elm) {
+const $ = require('jquery')
+
+const inViewport = (elem, options = {}) => {
+  if (!elem) {
     throw new Error('element is required in inViewport')
   }
 
-  let element = elm
+  const opts = Object.assign({
+    tolerance: false,
+    container: document.body
+  }, options)
 
-  if (typeof elm === 'string') {
-    element = document.querySelector(elm)
+  const container = $(opts.container)
+  const contHeight = container.height()
+  const contTop = container.scrollTop()
+  const contBottom = contTop + contHeight // eslint-disable-line no-unused-vars
+
+  const elemTop = $(elem).offset().top - container.offset().top
+  const elemBottom = elemTop + $(elem).height()
+
+  const isTotal = (elemTop >= 0 && elemBottom <= contHeight)
+  const isPart = ((elemTop < 0 && elemBottom > 0) ||
+    (elemTop > 0 && elemTop <= contHeight)) && opts.tolerance
+
+  return isTotal || isPart
+}
+
+const inContainer = (elem, options = {}) => {
+  if (!elem) {
+    throw new Error('element is required in inContainer')
+  }
+
+  let element = elem
+  const opts = Object.assign({
+    tolerance: 0,
+    container: ''
+  }, options)
+
+  if (typeof elem === 'string') {
+    element = document.querySelector(elem)
   }
 
   const elmRect = element.getBoundingClientRect()
 
-  return (
-    elmRect.top + options.tolerance >= 0 &&
-    elmRect.left + options.tolerance >= 0 &&
-    elmRect.right - options.tolerance <= (window.innerWidth ||
-    document.documentElement.clientWidth) &&
-    elmRect.bottom - options.tolerance <= (window.innerHeight ||
-    document.documentElement.clientHeight)
-  )
-}
-
-const inContainer = (elm, options = { tolerance: 0, container: '' }) => {
-  if (!elm) {
-    throw new Error('element is required in inContainer')
-  }
-
-  let element = elm
-  let opts = Object.assign({}, options)
-
-  if (typeof elm === 'string') {
-    element = document.querySelector(elm)
-  }
-
-  if (typeof options === 'string') {
-    opts = {
-      tolerance: 0,
-      container: document.querySelector(options)
-    }
-  }
-  if (typeof options.container === 'string') {
-    opts.container = document.querySelector(options.container)
-  }
-  if (options instanceof HTMLElement) {
-    opts = {
-      tolerance: 0,
-      container: options
-    }
-  }
   if (!opts.container) {
-    throw new Error('container is required in inContainer')
+    return (
+      elmRect.top + opts.tolerance >= 0 &&
+      elmRect.left + opts.tolerance >= 0 &&
+      elmRect.right - opts.tolerance <= (window.innerWidth ||
+      document.documentElement.clientWidth) &&
+      elmRect.bottom - opts.tolerance <= (window.innerHeight ||
+      document.documentElement.clientHeight)
+    )
+  }
+
+  if (typeof opts.container === 'string') {
+    opts.container = document.querySelector(opts.container)
   }
 
   const containerRect = opts.container.getBoundingClientRect()

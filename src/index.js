@@ -1,5 +1,5 @@
 const ViewportObserver = require('./lib/ViewportObserver')
-const ResizeObserver   = require('./lib/ResizeObserver')
+const ResizeObserver = require('./lib/ResizeObserver')
 
 module.exports = {
   ViewportObserver,

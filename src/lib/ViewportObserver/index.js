@@ -1,9 +1,8 @@
 const debouncedScroll = require('./debouncedScroll')
-const observe         = require('./observe')
-const { inViewport }  = require('./in')
+const observe = require('./observe')
+const { inViewport } = require('./in')
 
 const ViewportObserver = (function () {
-
   const throttle = (func, limit) => {
     let wait = false
     return function () {
@@ -18,7 +17,6 @@ const ViewportObserver = (function () {
   }
 
   class ViewportObserver {
-
     constructor (options) {
       this.opts = Object.assign({
         tolerance: 0,
@@ -36,7 +34,7 @@ const ViewportObserver = (function () {
 
       if (typeof this.opts.container === 'string' && !!this.opts.container) {
         this._container = document.querySelector(this.opts.container)
-      } else if (this.opts.container instanceof HTMLElement) {
+      } else if (this.opts.container instanceof HTMLElement) { // eslint-disable-line no-undef
         this._container = this.opts.container
       }
 
@@ -47,14 +45,13 @@ const ViewportObserver = (function () {
       this.timeout = null
 
       this.unobserve = observe(document.body, () => {
-        Object.keys(this.subscribedElements).forEach((element) => {
+        for (let element in this.subscribedElements) {
           this.subscribe('enter', element)
           this.subscribe('leave', element)
-        })
+        }
       })
 
       this.connect()
-
     }
 
     scroll () {
@@ -121,7 +118,7 @@ const ViewportObserver = (function () {
     }
 
     connect () {
-      if (this._container instanceof HTMLElement) {
+      if (this._container instanceof HTMLElement) { // eslint-disable-line no-undef
         const style = window.getComputedStyle(this._container)
         if (style.position === 'static') {
           this._container.style.position = 'relative'
@@ -140,7 +137,6 @@ const ViewportObserver = (function () {
       this.unobserve()
       this.attached = false
     }
-    
   }
 
   Object.defineProperty(ViewportObserver, 'of', {
