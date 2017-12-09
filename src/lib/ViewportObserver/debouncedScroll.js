@@ -6,7 +6,7 @@ module.exports = (subscribedElements = {}, options = { tolerance: 0 }) => {
 
   if (!selectors.length) return
 
-  if (options.container === window) {
+  if (options.container === window || options.container === document.body) {
     testVisibility = inViewport
   } else {
     testVisibility = inContainer

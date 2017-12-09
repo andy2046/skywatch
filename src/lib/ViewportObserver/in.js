@@ -15,7 +15,10 @@ const inViewport = (elem, options = {}) => {
   const contTop = container.scrollTop()
   const contBottom = contTop + contHeight // eslint-disable-line no-unused-vars
 
-  const elemTop = $(elem).offset().top - container.offset().top
+  const elemTop = $(elem).offset().top - (opts.container === window
+    ? contTop
+    : container.offset().top
+  )
   const elemBottom = elemTop + $(elem).height()
 
   const isTotal = (elemTop >= 0 && elemBottom <= contHeight)

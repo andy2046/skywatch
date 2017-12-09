@@ -1,1 +1,1 @@
-const { ViewportObserver, ResizeObserver } = require('../src')
+const { ViewportObserver, ResizeObserver } = require('../dist/skywatch')

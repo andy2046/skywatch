@@ -1,6 +1,6 @@
 {
   "name": "skywatch",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "reactive ViewportObserver and ResizeObserver",
   "main": "dist/skywatch.js",
   "scripts": {
