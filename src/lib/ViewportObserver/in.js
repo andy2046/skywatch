@@ -1,4 +1,7 @@
-const $ = require('jquery')
+const $ = require('jquery/src/core')
+require('jquery/src/core/init')
+require('jquery/src/dimensions')
+require('jquery/src/offset')
 
 const inViewport = (elem, options = {}) => {
   if (!elem) {

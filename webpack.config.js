@@ -13,6 +13,12 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /jquery[\\\/]src[\\\/]selector\.js$/,
+        use: {
+          loader: "amd-define-factory-patcher-loader"
+        }
+      },
+      {
         test: /\.js$/,
         include: __dirname + '/src',
         exclude: /node_modules/,
