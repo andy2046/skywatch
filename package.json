@@ -1,6 +1,6 @@
 {
   "name": "skywatch",
-  "version": "0.3.5",
+  "version": "0.3.6",
   "description": "reactive ViewportObserver and ResizeObserver",
   "main": "dist/skywatch.js",
   "scripts": {
@@ -43,7 +43,7 @@
     "eslint-watch": "3.1.0",
     "jquery": "3.3.1",
     "sizzle": "2.3.3",
-    "uglifyjs-webpack-plugin": "1.1.2",
+    "uglifyjs-webpack-plugin": "1.2.3",
     "webpack": "3.5.5"
   },
   "author": "AndyP (https://www.npmjs.com/~andy*()",
